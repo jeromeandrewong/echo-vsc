@@ -3,9 +3,14 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
+
+	log "echo/internal/logger"
+
+	"github.com/charmbracelet/bubbles/list"
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 const VSC_EXTENSION_PATH = "/.vscode/extensions"
@@ -20,24 +25,86 @@ type PackageData struct {
 		Themes []Theme `json:"themes"`
 	} `json:"contributes"`
 }
+type model struct {
+	list   list.Model
+	choice Theme
+}
+
+func (t Theme) Title() string       { return t.Label }
+func (t Theme) Description() string { return t.Path }
+func (t Theme) FilterValue() string { return t.Label }
+
+func initialModel(themes []Theme) model {
+	items := make([]list.Item, len(themes))
+	for i, theme := range themes {
+		items[i] = theme
+	}
+
+	l := list.New(items, list.NewDefaultDelegate(), 0, 0)
+	l.Title = "VSCode Themes"
+
+	return model{list: l}
+}
+func (m model) Init() tea.Cmd {
+	return nil
+}
+
+func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		if msg.String() == "ctrl+c" {
+			return m, tea.Quit
+		}
+		if msg.String() == "enter" {
+			t, ok := m.list.SelectedItem().(Theme)
+			if ok {
+				m.choice = t
+				return m, tea.Quit
+			}
+		}
+	case tea.WindowSizeMsg:
+		h, v := docStyle.GetFrameSize()
+		m.list.SetSize(msg.Width-h, msg.Height-v)
+	}
+
+	var cmd tea.Cmd
+	m.list, cmd = m.list.Update(msg)
+	return m, cmd
+}
+
+func (m model) View() string {
+	return docStyle.Render(m.list.View())
+}
+
+var docStyle = lipgloss.NewStyle().Margin(1, 2)
 
 func main() {
+
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		fmt.Printf("Error getting home directory: %v\n", err)
+		log.Error("Error getting home directory", "error", err)
 	}
 
 	vscDir := homeDir + VSC_EXTENSION_PATH
-	fmt.Printf("VSC directory: %s\n", vscDir)
+	log.Info("VSC directory", "path", vscDir)
 
 	themes, err := getVSCThemes(vscDir)
 	if err != nil {
-		log.Fatal(err)
-		return
+		log.Fatal("Failed to get VSC themes", "error", err)
 	}
 
-	for _, theme := range themes {
-		fmt.Printf("Theme: %s\n", theme)
+	p := tea.NewProgram(initialModel(themes), tea.WithAltScreen())
+
+	m, err := p.Run()
+	if err != nil {
+		log.Fatal("Error running program", "error", err)
+		os.Exit(1)
+	}
+
+	if m, ok := m.(model); ok && m.choice.Label != "" {
+		fmt.Printf("Selected theme: %s\nPath: %s\n", m.choice.Label, m.choice.Path)
+	} else {
+		fmt.Println("No theme selected")
 	}
 }
 
@@ -57,7 +124,7 @@ func getVSCThemes(vscDir string) ([]Theme, error) {
 
 		extensionThemes, err := getThemesFromExtension(vscDir, extension)
 		if err != nil {
-			log.Printf("Error processing extension %s: %v", extension.Name(), err)
+			log.Warn("Error processing extension", "extension", extension.Name(), "error", err)
 			continue
 		}
 
