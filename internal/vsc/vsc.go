@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 	"sync"
 )
 
@@ -97,12 +96,6 @@ func getThemesFromExtension(vscDir string, extension os.DirEntry) ([]theme.Theme
 
 	for _, t := range packageData.Contributes.Themes {
 		themePath := filepath.Join(extensionPath, t.Path)
-
-		// Check if there's a corresponding .itermcolors file
-		itermPath := strings.TrimSuffix(themePath, filepath.Ext(themePath)) + ".itermcolors"
-		if _, err := os.Stat(itermPath); err == nil {
-			themePath = itermPath
-		}
 
 		themes = append(themes, theme.Theme{
 			Label: t.Label,
