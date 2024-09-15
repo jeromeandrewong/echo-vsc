@@ -1,4 +1,4 @@
-module echo
+module github.com/jeromeandrewong/echo-vsc
 
 go 1.22.1
 

@@ -8,10 +8,10 @@ import (
 	"path/filepath"
 	"time"
 
-	"echo/internal/constants"
-	log "echo/internal/logger"
-	"echo/internal/theme"
-	"echo/pkg/utils"
+	"github.com/jeromeandrewong/echo-vsc/internal/constants"
+	log "github.com/jeromeandrewong/echo-vsc/internal/logger"
+	"github.com/jeromeandrewong/echo-vsc/internal/theme"
+	"github.com/jeromeandrewong/echo-vsc/pkg/utils"
 )
 
 type ThemeOptions struct {

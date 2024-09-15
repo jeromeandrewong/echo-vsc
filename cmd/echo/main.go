@@ -5,11 +5,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"echo/internal/converter"
-	log "echo/internal/logger"
-	"echo/internal/theme"
-	"echo/internal/vsc"
-	"echo/pkg/utils"
+	"github.com/jeromeandrewong/echo-vsc/internal/converter"
+	log "github.com/jeromeandrewong/echo-vsc/internal/logger"
+	"github.com/jeromeandrewong/echo-vsc/internal/theme"
+	"github.com/jeromeandrewong/echo-vsc/internal/vsc"
+	"github.com/jeromeandrewong/echo-vsc/pkg/utils"
 
 	tea "github.com/charmbracelet/bubbletea"
 )

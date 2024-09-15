@@ -1,13 +1,14 @@
 package vsc
 
 import (
-	log "echo/internal/logger"
-	"echo/internal/theme"
 	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
 	"sync"
+
+	log "github.com/jeromeandrewong/echo-vsc/internal/logger"
+	"github.com/jeromeandrewong/echo-vsc/internal/theme"
 )
 
 type PackageData struct {
