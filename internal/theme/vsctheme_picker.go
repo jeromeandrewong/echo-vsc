@@ -1,4 +1,4 @@
-package themepicker
+package theme
 
 import (
 	"github.com/charmbracelet/bubbles/list"
@@ -29,7 +29,7 @@ func New(themes []Theme) Model {
 	}
 
 	l := list.New(items, list.NewDefaultDelegate(), 0, 0)
-	l.Title = "VSCode Themes"
+	l.Title = "Pick the VSC theme you want to convert!"
 
 	return Model{list: l}
 }
