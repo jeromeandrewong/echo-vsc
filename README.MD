@@ -1,18 +1,30 @@
 
 # Echo
 
-A CLI tool to convert your **VSCode themes** to **iTerm colors**.
+A CLI tool to convert your existing **VSCode themes** to **iTerm colors**.
 
 ## Demo
 
 ![demo](demo.gif)
 
+## Installation
+
+```bash
+go install github.com/jeromeandrewong/echo-vsc/cmd/echo-vsc@latest
+```
+
+## Usage
+
+```bash
+echo-vsc
+```
+
 ## Project Structure
 
 ```txt
-echo/
+echo-vsc/
 ├── cmd/
-│   └── echo/
+│   └── echo-vsc/
 │       └── main.go
 ├── internal/
 │   ├── constants/
