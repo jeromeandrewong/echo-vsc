@@ -82,10 +82,7 @@ func getThemesFromExtension(vscDir string, extension os.DirEntry) ([]theme.Theme
 	var packageData struct {
 		DisplayName string `json:"displayName"`
 		Contributes struct {
-			Themes []struct {
-				Label string `json:"label"`
-				Path  string `json:"path"`
-			} `json:"themes"`
+			Themes []theme.Theme `json:"themes"`
 		} `json:"contributes"`
 	}
 
